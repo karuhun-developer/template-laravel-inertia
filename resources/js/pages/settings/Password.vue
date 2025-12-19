@@ -10,6 +10,7 @@ import HeadingSmall from '@/components/HeadingSmall.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useToast } from '@/composables/useToast';
 import { type BreadcrumbItem } from '@/types';
 
 const breadcrumbItems: BreadcrumbItem[] = [
@@ -18,6 +19,8 @@ const breadcrumbItems: BreadcrumbItem[] = [
         href: edit().url,
     },
 ];
+
+const { toast } = useToast();
 </script>
 
 <template>
@@ -36,6 +39,13 @@ const breadcrumbItems: BreadcrumbItem[] = [
                     :options="{
                         preserveScroll: true,
                     }"
+                    :onSuccess="
+                        () =>
+                            toast.fire({
+                                icon: 'success',
+                                title: 'Password updated.',
+                            })
+                    "
                     reset-on-success
                     :reset-on-error="[
                         'password',
@@ -43,7 +53,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
                         'current_password',
                     ]"
                     class="space-y-6"
-                    v-slot="{ errors, processing, recentlySuccessful }"
+                    v-slot="{ errors, processing }"
                 >
                     <div class="grid gap-2">
                         <Label for="current_password">Current password</Label>
@@ -92,20 +102,6 @@ const breadcrumbItems: BreadcrumbItem[] = [
                             data-test="update-password-button"
                             >Save password</Button
                         >
-
-                        <Transition
-                            enter-active-class="transition ease-in-out"
-                            enter-from-class="opacity-0"
-                            leave-active-class="transition ease-in-out"
-                            leave-to-class="opacity-0"
-                        >
-                            <p
-                                v-show="recentlySuccessful"
-                                class="text-sm text-neutral-600"
-                            >
-                                Saved.
-                            </p>
-                        </Transition>
                     </div>
                 </Form>
             </div>

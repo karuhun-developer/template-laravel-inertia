@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
+import { useToast } from '@/composables/useToast';
 import { edit } from '@/routes/profile';
 import { send } from '@/routes/verification';
 import { Form, Head, Link, usePage } from '@inertiajs/vue3';
@@ -30,6 +31,8 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
 const page = usePage();
 const user = page.props.auth.user;
+
+const { toast } = useToast();
 </script>
 
 <template>
@@ -45,8 +48,15 @@ const user = page.props.auth.user;
 
                 <Form
                     v-bind="ProfileController.update.form()"
+                    :onSuccess="
+                        () =>
+                            toast.fire({
+                                icon: 'success',
+                                title: 'Profile updated.',
+                            })
+                    "
                     class="space-y-6"
-                    v-slot="{ errors, processing, recentlySuccessful }"
+                    v-slot="{ errors, processing }"
                 >
                     <div class="grid gap-2">
                         <Label for="name">Name</Label>
@@ -104,20 +114,6 @@ const user = page.props.auth.user;
                             data-test="update-profile-button"
                             >Save</Button
                         >
-
-                        <Transition
-                            enter-active-class="transition ease-in-out"
-                            enter-from-class="opacity-0"
-                            leave-active-class="transition ease-in-out"
-                            leave-to-class="opacity-0"
-                        >
-                            <p
-                                v-show="recentlySuccessful"
-                                class="text-sm text-neutral-600"
-                            >
-                                Saved.
-                            </p>
-                        </Transition>
                     </div>
                 </Form>
             </div>
