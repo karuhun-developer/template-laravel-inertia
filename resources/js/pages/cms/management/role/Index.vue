@@ -12,18 +12,12 @@ import { useToast } from '@/composables/useToast';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { PaginationItem, type BreadcrumbItem } from '@/types';
 import { RoleDataItem } from '@/types/cms/management/role';
-import { Head, router } from '@inertiajs/vue3';
+import { Head, router, usePage } from '@inertiajs/vue3';
 import { ModalLink } from '@inertiaui/modal-vue';
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
 import { Pencil, Plus, Trash2 } from 'lucide-vue-next';
-
-const { confirm } = useConfirm();
-const { toast } = useToast();
-
-const title = 'Role Management';
-const description =
-    'Manage roles and their permissions within the application.';
+import { computed } from 'vue';
 
 const props = defineProps<{
     data: PaginationItem<RoleDataItem>;
@@ -31,7 +25,19 @@ const props = defineProps<{
     order?: 'asc' | 'desc';
     search?: string;
     paginate?: number;
+    resource: string;
 }>();
+
+const page = usePage();
+const { confirm } = useConfirm();
+const { toast } = useToast();
+
+// @ts-ignore
+const can = computed(() => page.props.auth.user.can);
+
+const title = 'Role Management';
+const description =
+    'Manage roles and their permissions within the application.';
 
 const columns = [
     { label: 'Name', key: 'name', sortable: true },
@@ -64,9 +70,13 @@ const breadcrumbItems: BreadcrumbItem[] = [
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
             <div class="flex items-center justify-between">
                 <Heading :title="title" :description="description" />
-                <ModalLink :href="create().url" slideover>
+                <ModalLink
+                    :href="create().url"
+                    slideover
+                    v-if="can['create' + resource]"
+                >
                     <Button>
-                        <Plus class="mr-2 h-4 w-4" />
+                        <Plus class="h-4 w-4" />
                         Create
                     </Button>
                 </ModalLink>
@@ -84,7 +94,11 @@ const breadcrumbItems: BreadcrumbItem[] = [
                 </template>
                 <template #actions="{ row }">
                     <div class="flex items-center justify-center gap-2">
-                        <ModalLink :href="edit({ role: row.id }).url" slideover>
+                        <ModalLink
+                            :href="edit({ role: row.id }).url"
+                            slideover
+                            v-if="can['update' + resource]"
+                        >
                             <Button variant="ghost" size="icon">
                                 <Pencil class="h-4 w-4" />
                             </Button>
@@ -92,6 +106,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
                         <Button
                             variant="ghost"
                             size="icon"
+                            v-if="can['delete' + resource]"
                             @click="
                                 confirm({
                                     title: 'Delete Role?',

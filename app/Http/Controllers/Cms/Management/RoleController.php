@@ -46,6 +46,7 @@ class RoleController extends Controller
             'paginate' => $paginate,
             'searchBySpecific' => $searchBySpecific,
             'search' => $search,
+            'resource' => $this->resource,
         ]);
     }
 
