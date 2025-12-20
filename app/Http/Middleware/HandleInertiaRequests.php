@@ -4,8 +4,8 @@ namespace App\Http\Middleware;
 
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Middleware;
-use Spatie\Permission\Models\Permission;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -44,18 +44,16 @@ class HandleInertiaRequests extends Middleware
             'name' => config('app.name'),
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
-                'user' => $request->user() ? [
-                    'id' => $request->user()->id,
-                    'name' => $request->user()->name,
-                    'email' => $request->user()->email,
-                    'phone' => $request->user()->phone,
-                    // Share permission and roles
-                    'can' => $request->user()?->getPermissionsViaRoles()
-                        ->mapWithKeys(function (Permission $permission) {
-                            return [$permission['name'] => auth()->user()->can($permission['name'])];
-                        }),
-                    'roles' => $request->user()->getRoleNames(),
-                ] : null,
+                'user' => $request->user() ? Cache::flexible('auth:user:'.$request->user()->id, [300, 600], function () use ($request) {
+                    return [
+                        'id' => $request->user()->id,
+                        'name' => $request->user()->name,
+                        'email' => $request->user()->email,
+                        'phone' => $request->user()->phone,
+                        'permissions' => $request->user()->getAllPermissions()->pluck('name'),
+                        'roles' => $request->user()->getRoleNames(),
+                    ];
+                }) : null,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];

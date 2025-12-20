@@ -8,16 +8,16 @@ import Heading from '@/components/Heading.vue';
 import ResourceTable from '@/components/ResourceTable.vue';
 import { Button } from '@/components/ui/button';
 import { useConfirm } from '@/composables/useConfirm';
+import { usePermission } from '@/composables/usePermission';
 import { useToast } from '@/composables/useToast';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { PaginationItem, type BreadcrumbItem } from '@/types';
 import { RoleDataItem } from '@/types/cms/management/role';
-import { Head, router, usePage } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
 import { ModalLink } from '@inertiaui/modal-vue';
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
 import { Pencil, Plus, Trash2 } from 'lucide-vue-next';
-import { computed } from 'vue';
 
 const props = defineProps<{
     data: PaginationItem<RoleDataItem>;
@@ -28,12 +28,9 @@ const props = defineProps<{
     resource: string;
 }>();
 
-const page = usePage();
 const { confirm } = useConfirm();
 const { toast } = useToast();
-
-// @ts-ignore
-const can = computed(() => page.props.auth.user.can);
+const { hasPermission } = usePermission();
 
 const title = 'Role Management';
 const description =
@@ -73,7 +70,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
                 <ModalLink
                     :href="create().url"
                     slideover
-                    v-if="can['create' + resource]"
+                    v-if="hasPermission('create' + resource)"
                 >
                     <Button>
                         <Plus class="h-4 w-4" />
@@ -97,7 +94,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
                         <ModalLink
                             :href="edit({ role: row.id }).url"
                             slideover
-                            v-if="can['update' + resource]"
+                            v-if="hasPermission('update' + resource)"
                         >
                             <Button variant="ghost" size="icon">
                                 <Pencil class="h-4 w-4" />
@@ -106,7 +103,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
                         <Button
                             variant="ghost"
                             size="icon"
-                            v-if="can['delete' + resource]"
+                            v-if="hasPermission('delete' + resource)"
                             @click="
                                 confirm({
                                     title: 'Delete Role?',
