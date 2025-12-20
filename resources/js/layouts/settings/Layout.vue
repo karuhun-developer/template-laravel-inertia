@@ -14,18 +14,22 @@ const sidebarNavItems: NavItem[] = [
     {
         title: 'Profile',
         href: editProfile(),
+        activePattern: '/settings/profile',
     },
     {
         title: 'Password',
         href: editPassword(),
+        activePattern: '/settings/password',
     },
     {
         title: 'Two-Factor Auth',
         href: show(),
+        activePattern: '/settings/two-factor',
     },
     {
         title: 'Appearance',
         href: editAppearance(),
+        activePattern: '/settings/appearance',
     },
 ];
 
@@ -48,7 +52,12 @@ const currentPath = typeof window !== undefined ? window.location.pathname : '';
                         variant="ghost"
                         :class="[
                             'w-full justify-start',
-                            { 'bg-muted': urlIsActive(item.href, currentPath) },
+                            {
+                                'bg-muted': urlIsActive(
+                                    item.activePattern,
+                                    currentPath,
+                                ),
+                            },
                         ]"
                         as-child
                     >

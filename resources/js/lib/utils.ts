@@ -7,12 +7,24 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function urlIsActive(
-    urlToCheck: NonNullable<InertiaLinkProps['href']>,
-    currentUrl: string,
+    urlToCheck?: string | string[],
+    currentUrl?: string,
 ) {
-    return toUrl(urlToCheck) === currentUrl;
+    // If it's an array, we treat them as route name patterns
+    if (Array.isArray(urlToCheck)) {
+        return urlToCheck.some((pattern) => {
+            const url = toUrl(pattern);
+
+            return url && currentUrl?.includes(url);
+        });
+    }
+
+    // Fallback to string contains check
+    const url = toUrl(urlToCheck);
+
+    return url ? currentUrl?.includes(url) : false;
 }
 
-export function toUrl(href: NonNullable<InertiaLinkProps['href']>) {
+export function toUrl(href: NonNullable<InertiaLinkProps['href']> | undefined) {
     return typeof href === 'string' ? href : href?.url;
 }

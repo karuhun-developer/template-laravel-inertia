@@ -2,12 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Models\Spatie\Permission;
-use App\Models\Spatie\Role;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\File;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class PermissionSeeder extends Seeder
 {

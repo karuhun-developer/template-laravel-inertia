@@ -8,9 +8,10 @@ Route::group([
     'middleware' => ['auth', 'verified'],
 ], function () {
     // Dashboard Route
-    Route::get('/', function () {
+    Route::get('/dashboard', function () {
         return inertia('Dashboard');
     })->name('dashboard');
+
+    // Management Routes
+    require 'cms/management.php';
 });
-
-

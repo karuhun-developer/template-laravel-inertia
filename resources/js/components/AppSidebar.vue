@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { index as roleIndex } from '@/actions/App/Http/Controllers/Cms/Management/RoleController';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
@@ -22,6 +23,32 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
+        activePattern: ['/cms/dashboard'],
+    },
+    {
+        title: 'Managements',
+        href: '#',
+        icon: Folder,
+        activePattern: ['/cms/management/'],
+        items: [
+            {
+                title: 'Permission',
+                href: '#',
+            },
+            {
+                title: 'Role',
+                href: roleIndex(),
+                activePattern: '/cms/management/role',
+            },
+            {
+                title: 'Menu',
+                href: '#',
+            },
+            {
+                title: 'User',
+                href: '#',
+            },
+        ],
     },
 ];
 
