@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Menu\Menu;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -53,6 +54,9 @@ class HandleInertiaRequests extends Middleware
                         'permissions' => $request->user()->getAllPermissions()->pluck('name'),
                         'roles' => $request->user()->getRoleNames(),
                     ];
+                }) : null,
+                'menus' => $request->user() ? Cache::flexible('auth:menu:'.$request->user()->id, [300, 600], function () use ($request) {
+                    return Menu::with('subMenu')->where('role_id', $request->user()->roles()->first()->id)->orderBy('order', 'asc')->get();
                 }) : null,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',

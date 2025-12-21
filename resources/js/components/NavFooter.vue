@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/sidebar';
 import { toUrl } from '@/lib/utils';
 import { type NavItem } from '@/types';
+import Icon from './Icon.vue';
 
 interface Props {
     items: NavItem[];
@@ -23,18 +24,18 @@ defineProps<Props>();
     >
         <SidebarGroupContent>
             <SidebarMenu>
-                <SidebarMenuItem v-for="item in items" :key="item.title">
+                <SidebarMenuItem v-for="item in items" :key="item.name">
                     <SidebarMenuButton
                         class="text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100"
                         as-child
                     >
                         <a
-                            :href="toUrl(item.href)"
+                            :href="toUrl(item.url)"
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            <component :is="item.icon" />
-                            <span>{{ item.title }}</span>
+                            <Icon :name="item.icon" v-if="item.icon" />
+                            <span>{{ item.name }}</span>
                         </a>
                     </SidebarMenuButton>
                 </SidebarMenuItem>

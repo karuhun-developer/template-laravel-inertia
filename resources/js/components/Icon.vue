@@ -4,7 +4,7 @@ import * as icons from 'lucide-vue-next';
 import { computed } from 'vue';
 
 interface Props {
-    name: string;
+    name?: string;
     class?: string;
     size?: number | string;
     color?: string;

@@ -31,10 +31,10 @@ import {
 import UserMenuContent from '@/components/UserMenuContent.vue';
 import { getInitials } from '@/composables/useInitials';
 import { toUrl, urlIsActive } from '@/lib/utils';
-import { dashboard } from '@/routes';
+import { dashboard } from '@/routes/cms';
 import type { BreadcrumbItem, NavItem } from '@/types';
 import { InertiaLinkProps, Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-vue-next';
+import { Menu, Search } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 interface Props {
@@ -49,35 +49,37 @@ const page = usePage();
 const auth = computed(() => page.props.auth);
 
 const isCurrentRoute = computed(
-    () => (url: NonNullable<InertiaLinkProps['href']>) =>
-        urlIsActive(url, page.url),
+    () => (url: NonNullable<InertiaLinkProps['href']> | string | undefined) =>
+        urlIsActive(toUrl(url), page.url),
 );
 
 const activeItemStyles = computed(
-    () => (url: NonNullable<InertiaLinkProps['href']>) =>
-        isCurrentRoute.value(toUrl(url))
+    () => (url: NonNullable<InertiaLinkProps['href']> | string | undefined) => {
+        const resolvedUrl = toUrl(url);
+        return resolvedUrl && isCurrentRoute.value(resolvedUrl)
             ? 'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100'
-            : '',
+            : '';
+    },
 );
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
+        name: 'Dashboard',
+        url: dashboard(),
+        icon: 'LayoutGrid',
     },
 ];
 
 const rightNavItems: NavItem[] = [
     {
-        title: 'Repository',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: Folder,
+        name: 'Repository',
+        url: 'https://github.com/laravel/vue-starter-kit',
+        icon: 'Folder',
     },
     {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
-        icon: BookOpen,
+        name: 'Documentation',
+        url: 'https://laravel.com/docs/starter-kits#vue',
+        icon: 'BookOpen',
     },
 ];
 </script>
@@ -113,24 +115,24 @@ const rightNavItems: NavItem[] = [
                                 <nav class="-mx-3 space-y-1">
                                     <Link
                                         v-for="item in mainNavItems"
-                                        :key="item.title"
-                                        :href="item.href"
+                                        :key="item.name"
+                                        :href="item.url"
                                         class="flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent"
-                                        :class="activeItemStyles(item.href)"
+                                        :class="activeItemStyles(item.url)"
                                     >
                                         <component
                                             v-if="item.icon"
                                             :is="item.icon"
                                             class="h-5 w-5"
                                         />
-                                        {{ item.title }}
+                                        {{ item.name }}
                                     </Link>
                                 </nav>
                                 <div class="flex flex-col space-y-4">
                                     <a
                                         v-for="item in rightNavItems"
-                                        :key="item.title"
-                                        :href="toUrl(item.href)"
+                                        :key="item.name"
+                                        :href="toUrl(item.url)"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         class="flex items-center space-x-2 text-sm font-medium"
@@ -140,7 +142,7 @@ const rightNavItems: NavItem[] = [
                                             :is="item.icon"
                                             class="h-5 w-5"
                                         />
-                                        <span>{{ item.title }}</span>
+                                        <span>{{ item.name }}</span>
                                     </a>
                                 </div>
                             </div>
@@ -166,20 +168,20 @@ const rightNavItems: NavItem[] = [
                                 <Link
                                     :class="[
                                         navigationMenuTriggerStyle(),
-                                        activeItemStyles(item.href),
+                                        activeItemStyles(item.url),
                                         'h-9 cursor-pointer px-3',
                                     ]"
-                                    :href="item.href"
+                                    :href="item.url"
                                 >
                                     <component
                                         v-if="item.icon"
                                         :is="item.icon"
                                         class="mr-2 h-4 w-4"
                                     />
-                                    {{ item.title }}
+                                    {{ item.name }}
                                 </Link>
                                 <div
-                                    v-if="isCurrentRoute(item.href)"
+                                    v-if="isCurrentRoute(item.url)"
                                     class="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-black dark:bg-white"
                                 ></div>
                             </NavigationMenuItem>
@@ -202,7 +204,7 @@ const rightNavItems: NavItem[] = [
                         <div class="hidden space-x-1 lg:flex">
                             <template
                                 v-for="item in rightNavItems"
-                                :key="item.title"
+                                :key="item.name"
                             >
                                 <TooltipProvider :delay-duration="0">
                                     <Tooltip>
@@ -214,12 +216,12 @@ const rightNavItems: NavItem[] = [
                                                 class="group h-9 w-9 cursor-pointer"
                                             >
                                                 <a
-                                                    :href="toUrl(item.href)"
+                                                    :href="toUrl(item.url)"
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                 >
                                                     <span class="sr-only">{{
-                                                        item.title
+                                                        item.name
                                                     }}</span>
                                                     <component
                                                         :is="item.icon"
@@ -229,7 +231,7 @@ const rightNavItems: NavItem[] = [
                                             </Button>
                                         </TooltipTrigger>
                                         <TooltipContent>
-                                            <p>{{ item.title }}</p>
+                                            <p>{{ item.name }}</p>
                                         </TooltipContent>
                                     </Tooltip>
                                 </TooltipProvider>

@@ -27,6 +27,7 @@ import { urlIsActive } from '@/lib/utils';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
 import { ChevronRight } from 'lucide-vue-next';
+import Icon from './Icon.vue';
 
 defineProps<{
     items: NavItem[];
@@ -40,55 +41,52 @@ const { state } = useSidebar();
     <SidebarGroup class="px-2 py-0">
         <SidebarGroupLabel>Platform</SidebarGroupLabel>
         <SidebarMenu>
-            <template v-for="item in items" :key="item.title">
+            <template v-for="item in items" :key="item.name">
                 <template
                     v-if="
                         state === 'collapsed' &&
-                        item.items &&
-                        item.items.length > 0
+                        item.sub_menu &&
+                        item.sub_menu.length > 0
                     "
                 >
                     <SidebarMenuItem>
                         <DropdownMenu>
                             <DropdownMenuTrigger as-child>
                                 <SidebarMenuButton
-                                    :tooltip="item.title"
+                                    :tooltip="item.name"
                                     :is-active="
                                         item.isActive ||
                                         urlIsActive(
-                                            item.activePattern,
+                                            item.active_pattern,
                                             page.url,
                                         )
                                     "
                                 >
-                                    <component
-                                        :is="item.icon"
-                                        v-if="item.icon"
-                                    />
-                                    <span>{{ item.title }}</span>
+                                    <Icon :name="item.icon" v-if="item.icon" />
+                                    <span>{{ item.name }}</span>
                                     <ChevronRight class="ml-auto" />
                                 </SidebarMenuButton>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent side="right" align="start">
                                 <DropdownMenuLabel>{{
-                                    item.title
+                                    item.name
                                 }}</DropdownMenuLabel>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
-                                    v-for="subItem in item.items"
-                                    :key="subItem.title"
+                                    v-for="subItem in item.sub_menu"
+                                    :key="subItem.name"
                                     as-child
                                 >
                                     <Link
-                                        :href="subItem.href"
+                                        :href="subItem.url"
                                         :class="{
                                             'bg-accent': urlIsActive(
-                                                subItem.activePattern,
+                                                subItem.active_pattern,
                                                 page.url,
                                             ),
                                         }"
                                     >
-                                        {{ subItem.title }}
+                                        {{ subItem.name }}
                                     </Link>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
@@ -97,21 +95,21 @@ const { state } = useSidebar();
                 </template>
 
                 <Collapsible
-                    v-else-if="item.items && item.items.length > 0"
+                    v-else-if="item.sub_menu && item.sub_menu.length > 0"
                     as-child
                     :default-open="
                         item.isActive ||
-                        item.items.some((subItem) =>
-                            urlIsActive(subItem.activePattern, page.url),
+                        item.sub_menu.some((subItem) =>
+                            urlIsActive(subItem.active_pattern, page.url),
                         )
                     "
                     class="group/collapsible"
                 >
                     <SidebarMenuItem>
                         <CollapsibleTrigger as-child>
-                            <SidebarMenuButton :tooltip="item.title">
-                                <component :is="item.icon" v-if="item.icon" />
-                                <span>{{ item.title }}</span>
+                            <SidebarMenuButton :tooltip="item.name">
+                                <Icon :name="item.icon" v-if="item.icon" />
+                                <span>{{ item.name }}</span>
                                 <ChevronRight
                                     class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
                                 />
@@ -120,20 +118,20 @@ const { state } = useSidebar();
                         <CollapsibleContent>
                             <SidebarMenuSub>
                                 <SidebarMenuSubItem
-                                    v-for="subItem in item.items"
-                                    :key="subItem.title"
+                                    v-for="subItem in item.sub_menu"
+                                    :key="subItem.name"
                                 >
                                     <SidebarMenuSubButton
                                         as-child
                                         :is-active="
                                             urlIsActive(
-                                                subItem.activePattern,
+                                                subItem.active_pattern,
                                                 page.url,
                                             )
                                         "
                                     >
-                                        <Link :href="subItem.href">
-                                            <span>{{ subItem.title }}</span>
+                                        <Link :href="subItem.url">
+                                            <span>{{ subItem.name }}</span>
                                         </Link>
                                     </SidebarMenuSubButton>
                                 </SidebarMenuSubItem>
@@ -145,12 +143,12 @@ const { state } = useSidebar();
                 <SidebarMenuItem v-else>
                     <SidebarMenuButton
                         as-child
-                        :is-active="urlIsActive(item.activePattern, page.url)"
-                        :tooltip="item.title"
+                        :is-active="urlIsActive(item.active_pattern, page.url)"
+                        :tooltip="item.name"
                     >
-                        <Link :href="item.href">
-                            <component :is="item.icon" v-if="item.icon" />
-                            <span>{{ item.title }}</span>
+                        <Link :href="item.url">
+                            <Icon :name="item.icon" v-if="item.icon" />
+                            <span>{{ item.name }}</span>
                         </Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>

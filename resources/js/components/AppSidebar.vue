@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { index as permissionIndex } from '@/actions/App/Http/Controllers/Cms/Management/PermissionController';
-import { index as roleIndex } from '@/actions/App/Http/Controllers/Cms/Management/RoleController';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
@@ -14,58 +12,28 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes/cms';
-import { index as menuIndex } from '@/routes/cms/management/menus';
 import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
+import { Link, usePage } from '@inertiajs/vue3';
 import AppLogo from './AppLogo.vue';
 
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-        activePattern: ['/cms/dashboard'],
-    },
-    {
-        title: 'Managements',
-        href: '#',
-        icon: Folder,
-        activePattern: ['/cms/management/'],
-        items: [
-            {
-                title: 'Permission',
-                href: permissionIndex(),
-                activePattern: '/cms/management/permission',
-            },
-            {
-                title: 'Role',
-                href: roleIndex(),
-                activePattern: '/cms/management/role',
-            },
-            {
-                title: 'Menu',
-                href: menuIndex(),
-                activePattern: '/cms/management/menu',
-            },
-            {
-                title: 'User',
-                href: '#',
-            },
-        ],
-    },
-];
+// Get navigation items
+const page = usePage();
+
+// @ts-ignore
+const mainNavItems: NavItem[] = page.props.auth.menus;
+
+console.log(mainNavItems);
 
 const footerNavItems: NavItem[] = [
     {
-        title: 'Github Repo',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: Folder,
+        name: 'Github Repo',
+        url: 'https://github.com/laravel/vue-starter-kit',
+        icon: 'Folder',
     },
     {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
-        icon: BookOpen,
+        name: 'Documentation',
+        url: 'https://laravel.com/docs/starter-kits#vue',
+        icon: 'BookOpen',
     },
 ];
 </script>

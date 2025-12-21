@@ -12,24 +12,24 @@ import { Link } from '@inertiajs/vue3';
 
 const sidebarNavItems: NavItem[] = [
     {
-        title: 'Profile',
-        href: editProfile(),
-        activePattern: '/settings/profile',
+        name: 'Profile',
+        url: editProfile(),
+        active_pattern: '/settings/profile',
     },
     {
-        title: 'Password',
-        href: editPassword(),
-        activePattern: '/settings/password',
+        name: 'Password',
+        url: editPassword(),
+        active_pattern: '/settings/password',
     },
     {
-        title: 'Two-Factor Auth',
-        href: show(),
-        activePattern: '/settings/two-factor',
+        name: 'Two-Factor Auth',
+        url: show(),
+        active_pattern: '/settings/two-factor',
     },
     {
-        title: 'Appearance',
-        href: editAppearance(),
-        activePattern: '/settings/appearance',
+        name: 'Appearance',
+        url: editAppearance(),
+        active_pattern: '/settings/appearance',
     },
 ];
 
@@ -48,22 +48,22 @@ const currentPath = typeof window !== undefined ? window.location.pathname : '';
                 <nav class="flex flex-col space-y-1 space-x-0">
                     <Button
                         v-for="item in sidebarNavItems"
-                        :key="toUrl(item.href)"
+                        :key="toUrl(item.url)"
                         variant="ghost"
                         :class="[
                             'w-full justify-start',
                             {
                                 'bg-muted': urlIsActive(
-                                    item.activePattern,
+                                    item.active_pattern,
                                     currentPath,
                                 ),
                             },
                         ]"
                         as-child
                     >
-                        <Link :href="item.href">
+                        <Link :href="item.url">
                             <component :is="item.icon" class="h-4 w-4" />
-                            {{ item.title }}
+                            {{ item.name }}
                         </Link>
                     </Button>
                 </nav>

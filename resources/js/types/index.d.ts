@@ -1,5 +1,4 @@
 import { InertiaLinkProps } from '@inertiajs/vue3';
-import type { LucideIcon } from 'lucide-vue-next';
 
 interface PaginationItem<T> {
     data: T[];
@@ -24,6 +23,7 @@ interface PaginationItem<T> {
 
 export interface Auth {
     user: User;
+    menus?: NavItem[];
 }
 
 export interface BreadcrumbItem {
@@ -32,13 +32,12 @@ export interface BreadcrumbItem {
 }
 
 export interface NavItem {
-    title: string;
-    href: NonNullable<InertiaLinkProps['href']>;
-    icon?: LucideIcon;
+    name: string;
+    url: string | InertiaLinkProps['href'];
+    icon?: string;
     isActive?: boolean;
-    active?: string[];
-    activePattern?: string[] | string;
-    items?: NavItem[];
+    active_pattern?: string[] | string;
+    sub_menu?: NavItem[];
 }
 
 export type AppPageProps<
