@@ -3,16 +3,17 @@
 namespace App\Http\Controllers\Cms\Management;
 
 use App\Http\Controllers\Controller;
+use App\Models\Menu\Menu;
 use App\Models\Spatie\Role;
 use App\Traits\WithGetFilterData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
-class RoleController extends Controller
+class MenuController extends Controller
 {
     use WithGetFilterData;
 
-    protected string $resource = Role::class;
+    protected string $resource = Menu::class;
 
     /**
      * Display a listing of the resource.
@@ -22,15 +23,27 @@ class RoleController extends Controller
         Gate::authorize('view'.$this->resource);
 
         $order = $request?->order ?? 'desc';
-        $orderBy = $request?->orderBy ?? 'created_at';
+        $orderBy = $request?->orderBy ?? 'menus.order';
         $paginate = $request?->paginate ?? 10;
         $searchBySpecific = $request?->searchBySpecific ?? '';
         $search = $request?->search ?? '';
+
+        // Query
+        $model = Menu::query()
+            ->join('roles', 'menus.role_id', '=', 'roles.id')
+            ->select(
+                'menus.*',
+                'roles.name as role_name',
+            );
         $model = $this->getDataWithFilter(
-            model: new Role,
+            model: $model,
             searchBy: [
-                'name',
-                'guard_name',
+                'roles.name',
+                'menus.name',
+                'menus.url',
+                'menus.icon',
+                'menus.order',
+                'menus.active_pattern',
             ],
             order: $order,
             orderBy: $orderBy,
@@ -39,7 +52,7 @@ class RoleController extends Controller
             s: $search,
         );
 
-        return inertia('cms/management/role/Index', [
+        return inertia('cms/management/menu/Index', [
             'data' => $model,
             'order' => $order,
             'orderBy' => $orderBy,
@@ -55,7 +68,11 @@ class RoleController extends Controller
      */
     public function create()
     {
-        return inertia('cms/management/role/Create');
+        Gate::authorize('create'.$this->resource);
+
+        return inertia('cms/management/menu/Create', [
+            'roles' => Role::all(),
+        ]);
     }
 
     /**
@@ -66,11 +83,16 @@ class RoleController extends Controller
         Gate::authorize('create'.$this->resource);
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:roles,name',
-            'guard_name' => 'required|string|max:255',
+            'role_id' => 'required|exists:roles,id',
+            'name' => 'required|string|max:255',
+            'icon' => 'nullable|string|max:255',
+            'url' => 'required|string|max:255',
+            'order' => 'required|integer',
+            'active_pattern' => 'nullable|string|max:255',
+            'status' => 'required|boolean',
         ]);
 
-        Role::create($validated);
+        Menu::create($validated);
 
         return back();
     }
@@ -78,7 +100,7 @@ class RoleController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Role $role)
+    public function show(Menu $menu)
     {
         //
     }
@@ -86,28 +108,34 @@ class RoleController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Role $role)
+    public function edit(Menu $menu)
     {
         Gate::authorize('update'.$this->resource);
 
-        return inertia('cms/management/role/Edit', [
-            'role' => $role,
+        return inertia('cms/management/menu/Edit', [
+            'menu' => $menu,
+            'roles' => Role::all(),
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Role $role)
+    public function update(Request $request, Menu $menu)
     {
         Gate::authorize('update'.$this->resource);
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:roles,name,'.$role->id,
-            'guard_name' => 'required|string|max:255',
+            'role_id' => 'required|exists:roles,id',
+            'name' => 'required|string|max:255',
+            'icon' => 'nullable|string|max:255',
+            'url' => 'required|string|max:255',
+            'order' => 'required|integer',
+            'active_pattern' => 'nullable|string|max:255',
+            'status' => 'required|boolean',
         ]);
 
-        $role->update($validated);
+        $menu->update($validated);
 
         return back();
     }
@@ -115,11 +143,11 @@ class RoleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Role $role)
+    public function destroy(Menu $menu)
     {
         Gate::authorize('delete'.$this->resource);
 
-        $role->delete();
+        $menu->delete();
 
         return back();
     }

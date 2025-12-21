@@ -9,6 +9,8 @@ Route::group([
     Route::resources([
         'permissions' => \App\Http\Controllers\Cms\Management\PermissionController::class,
         'roles' => \App\Http\Controllers\Cms\Management\RoleController::class,
+        'menus' => \App\Http\Controllers\Cms\Management\MenuController::class,
+        'menus.sub-menus' => \App\Http\Controllers\Cms\Management\MenuSubController::class,
     ]);
 
     // Role Permissions Route

@@ -78,7 +78,7 @@ class PermissionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Permission $permission)
     {
         //
     }
@@ -86,11 +86,9 @@ class PermissionController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Permission $permission)
     {
         Gate::authorize('update'.$this->resource);
-
-        $permission = Permission::findOrFail($id);
 
         return inertia('cms/management/permission/Edit', [
             'permission' => $permission,
