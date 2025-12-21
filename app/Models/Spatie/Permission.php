@@ -2,6 +2,12 @@
 
 namespace App\Models\Spatie;
 
-use Spatie\Permission\Models\Permission as SpatiePermission;
+use Illuminate\Database\Eloquent\Model;
 
-class Permission extends SpatiePermission {}
+class Permission extends Model
+{
+    protected $fillable = [
+        'name',
+        'guard_name',
+    ];
+}

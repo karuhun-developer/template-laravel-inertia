@@ -3,7 +3,7 @@ import {
     create,
     destroy,
     edit,
-} from '@/actions/App/Http/Controllers/Cms/Management/RoleController';
+} from '@/actions/App/Http/Controllers/Cms/Management/PermissionController';
 import Heading from '@/components/Heading.vue';
 import ResourceTable from '@/components/ResourceTable.vue';
 import { Button } from '@/components/ui/button';
@@ -12,7 +12,7 @@ import { usePermission } from '@/composables/usePermission';
 import { useToast } from '@/composables/useToast';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { PaginationItem, type BreadcrumbItem } from '@/types';
-import { RoleDataItem } from '@/types/cms/management/role';
+import { PermissionDataItem } from '@/types/cms/management/permission';
 import { Head, router } from '@inertiajs/vue3';
 import { ModalLink } from '@inertiaui/modal-vue';
 import dayjs from 'dayjs';
@@ -20,7 +20,7 @@ import 'dayjs/locale/id';
 import { Pencil, Plus, Trash2 } from 'lucide-vue-next';
 
 const props = defineProps<{
-    data: PaginationItem<RoleDataItem>;
+    data: PaginationItem<PermissionDataItem>;
     orderBy?: string;
     order?: 'asc' | 'desc';
     search?: string;
@@ -32,9 +32,9 @@ const { confirm } = useConfirm();
 const { toast } = useToast();
 const { hasPermission } = usePermission();
 
-const title = 'Role Management';
+const title = 'Permission Management';
 const description =
-    'Manage roles and their permissions within the application.';
+    'Manage permissions and their permissions within the application.';
 
 const columns = [
     { label: 'Name', key: 'name', sortable: true },
@@ -92,7 +92,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
                 <template #actions="{ row }">
                     <div class="flex items-center justify-center gap-2">
                         <ModalLink
-                            :href="edit({ role: row.id }).url"
+                            :href="edit({ permission: row.id }).url"
                             slideover
                             v-if="hasPermission('update' + resource)"
                         >
@@ -106,21 +106,21 @@ const breadcrumbItems: BreadcrumbItem[] = [
                             v-if="hasPermission('delete' + resource)"
                             @click="
                                 confirm({
-                                    title: 'Delete Role?',
+                                    title: 'Delete Permission?',
                                     text: 'This action cannot be undone.',
                                     icon: 'warning',
                                     confirmButtonText: 'Yes, delete it!',
                                 }).then((result) => {
                                     if (result.isConfirmed) {
                                         router.delete(
-                                            destroy({ role: row.id }).url,
+                                            destroy({ permission: row.id }).url,
                                             {
                                                 preserveScroll: true,
                                                 preserveState: true,
                                                 onSuccess: () => {
                                                     toast.fire({
                                                         icon: 'success',
-                                                        title: 'Role deleted successfully.',
+                                                        title: 'Permission deleted successfully.',
                                                     });
                                                 },
                                             },

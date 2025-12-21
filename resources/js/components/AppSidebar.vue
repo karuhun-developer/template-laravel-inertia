@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { index as permissionIndex } from '@/actions/App/Http/Controllers/Cms/Management/PermissionController';
 import { index as roleIndex } from '@/actions/App/Http/Controllers/Cms/Management/RoleController';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -33,7 +34,8 @@ const mainNavItems: NavItem[] = [
         items: [
             {
                 title: 'Permission',
-                href: '#',
+                href: permissionIndex(),
+                activePattern: '/cms/management/permission',
             },
             {
                 title: 'Role',
