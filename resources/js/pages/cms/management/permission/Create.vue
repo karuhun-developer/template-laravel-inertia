@@ -67,7 +67,7 @@ const { toast } = useToast();
                         The guard name for the permission, usually 'web' or
                         'api'.
                     </InputDescription>
-                    <Select name="guard_name" defaultValue="api">
+                    <Select name="guard_name" default-value="api">
                         <SelectTrigger id="guard_name" class="mt-1 w-full">
                             <SelectValue placeholder="Select a guard" />
                         </SelectTrigger>

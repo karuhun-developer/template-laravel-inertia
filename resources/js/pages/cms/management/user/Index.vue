@@ -3,8 +3,8 @@ import {
     create,
     destroy,
     edit,
-} from '@/actions/App/Http/Controllers/Cms/Management/RoleController';
-import { index as rolePermission } from '@/actions/App/Http/Controllers/Cms/Management/RolePermissionController';
+    editPassword,
+} from '@/actions/App/Http/Controllers/Cms/Management/UserController';
 import Heading from '@/components/Heading.vue';
 import ResourceTable from '@/components/ResourceTable.vue';
 import { Button } from '@/components/ui/button';
@@ -13,15 +13,15 @@ import { usePermission } from '@/composables/usePermission';
 import { useToast } from '@/composables/useToast';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { PaginationItem, type BreadcrumbItem } from '@/types';
-import { RoleDataItem } from '@/types/cms/management/role';
-import { Head, Link, router } from '@inertiajs/vue3';
+import { UserDataItem } from '@/types/cms/management/user';
+import { Head, router } from '@inertiajs/vue3';
 import { ModalLink } from '@inertiaui/modal-vue';
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
-import { Pencil, Plus, ShieldCheck, Trash2 } from 'lucide-vue-next';
+import { KeyRound, Pencil, Plus, Trash2 } from 'lucide-vue-next';
 
 defineProps<{
-    data: PaginationItem<RoleDataItem>;
+    data: PaginationItem<UserDataItem>;
     orderBy?: string;
     order?: 'asc' | 'desc';
     search?: string;
@@ -33,14 +33,20 @@ const { confirm } = useConfirm();
 const { toast } = useToast();
 const { hasPermission } = usePermission();
 
-const title = 'Role Management';
-const description =
-    'Manage roles and their permissions within the application.';
+const title = 'User Management';
+const description = 'Manage users in the application.';
 
 const columns = [
-    { label: 'Name', key: 'name', sortable: true },
-    { label: 'Guard', key: 'guard_name', sortable: true },
-    { label: 'Created At', key: 'created_at', sortable: true },
+    { label: 'Role', key: 'roles.name', sortable: true },
+    { label: 'Name', key: 'users.name', sortable: true },
+    { label: 'Email', key: 'users.email', sortable: true },
+    { label: 'Phone', key: 'users.phone', sortable: true },
+    {
+        label: 'Email Verified At',
+        key: 'users.email_verified_at',
+        sortable: true,
+    },
+    { label: 'Created At', key: 'users.created_at', sortable: true },
     {
         label: 'Actions',
         key: 'actions',
@@ -87,13 +93,39 @@ const breadcrumbItems: BreadcrumbItem[] = [
                 :search="search"
                 :paginate="paginate"
             >
-                <template #created_at="{ row }">
+                <template #roles.name="{ row }">
+                    {{ row.role_name }}
+                </template>
+                <template #users.name="{ row }">
+                    {{ row.name }}
+                </template>
+                <template #users.email="{ row }">
+                    {{ row.email }}
+                </template>
+                <template #users.phone="{ row }">
+                    {{ row.phone ?? '-' }}
+                </template>
+                <template #users.email_verified_at="{ row }">
+                    <span
+                        class="rounded-full bg-green-100 px-2 py-1 text-sm font-medium text-green-800"
+                        v-if="row.email_verified_at"
+                    >
+                        Verified
+                    </span>
+                    <span
+                        class="rounded-full bg-red-100 px-2 py-1 text-sm font-medium text-red-800"
+                        v-else
+                    >
+                        Not Verified
+                    </span>
+                </template>
+                <template #users.created_at="{ row }">
                     {{ dayjs(row.created_at).format('DD MMMM YYYY H:m:s') }}
                 </template>
                 <template #actions="{ row }">
                     <div class="flex items-center justify-center gap-2">
                         <ModalLink
-                            :href="edit({ role: row.id }).url"
+                            :href="edit({ user: row.id }).url"
                             slideover
                             v-if="hasPermission('update' + resource)"
                         >
@@ -101,39 +133,40 @@ const breadcrumbItems: BreadcrumbItem[] = [
                                 <Pencil class="h-4 w-4" />
                             </Button>
                         </ModalLink>
-                        <Link
-                            :href="rolePermission({ role: row.id })"
-                            v-if="hasPermission('validate' + resource)"
+                        <ModalLink
+                            :href="editPassword({ user: row.id }).url"
+                            slideover
+                            v-if="hasPermission('update' + resource)"
                         >
                             <Button
                                 size="sm"
                                 class="h-8 bg-yellow-500 px-2 text-black hover:bg-yellow-600"
                             >
-                                <ShieldCheck class="h-4 w-4" />
-                                Permissions
+                                <KeyRound class="h-4 w-4" />
+                                Edit Password
                             </Button>
-                        </Link>
+                        </ModalLink>
                         <Button
                             variant="ghost"
                             size="icon"
                             v-if="hasPermission('delete' + resource)"
                             @click="
                                 confirm({
-                                    title: 'Delete Role?',
+                                    title: 'Delete User?',
                                     text: 'This action cannot be undone.',
                                     icon: 'warning',
                                     confirmButtonText: 'Yes, delete it!',
                                 }).then((result) => {
                                     if (result.isConfirmed) {
                                         router.delete(
-                                            destroy({ role: row.id }).url,
+                                            destroy({ user: row.id }).url,
                                             {
                                                 preserveScroll: true,
                                                 preserveState: true,
                                                 onSuccess: () => {
                                                     toast.fire({
                                                         icon: 'success',
-                                                        title: 'Role deleted successfully.',
+                                                        title: 'User deleted successfully.',
                                                     });
                                                 },
                                             },

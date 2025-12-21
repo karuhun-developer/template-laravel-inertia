@@ -15,13 +15,14 @@ import {
 import { useToast } from '@/composables/useToast';
 import { CommonStatusEnum } from '@/enums/global.enum';
 import { MenuDataItem } from '@/types/cms/management/menu';
+import { RoleDataItem } from '@/types/cms/management/role';
 import { Form } from '@inertiajs/vue3';
 import { Modal } from '@inertiaui/modal-vue';
 import { Save } from 'lucide-vue-next';
 
-const props = defineProps<{
+defineProps<{
     menu: MenuDataItem;
-    roles: Array<{ id: number; name: string }>;
+    roles: RoleDataItem[];
 }>();
 
 const { toast } = useToast();

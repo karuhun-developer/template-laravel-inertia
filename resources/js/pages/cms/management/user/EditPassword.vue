@@ -1,21 +1,19 @@
 <script setup lang="ts">
-import { store } from '@/actions/App/Http/Controllers/Cms/Management/RoleController';
+import { updatePassword } from '@/actions/App/Http/Controllers/Cms/Management/UserController';
 import InputDescription from '@/components/InputDescription.vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import { useToast } from '@/composables/useToast';
+import { UserDataItem } from '@/types/cms/management/user';
 import { Form } from '@inertiajs/vue3';
 import { Modal } from '@inertiaui/modal-vue';
 import { Save } from 'lucide-vue-next';
+
+defineProps<{
+    user: UserDataItem;
+}>();
 
 const { toast } = useToast();
 </script>
@@ -24,21 +22,21 @@ const { toast } = useToast();
     <Modal v-slot="{ close }">
         <div class="p-6">
             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                Create Role
+                Edit Password {{ user.name }}
             </h2>
 
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Create a new role that can be assigned to users.
+                Edit the password for the user account.
             </p>
 
             <Form
-                v-bind="store.form()"
+                v-bind="updatePassword.form({ user: user.id })"
                 class="mt-6 space-y-6"
                 @success="
                     () => {
                         toast.fire({
                             icon: 'success',
-                            title: 'Role created.',
+                            title: 'Password updated.',
                         });
                         close();
                     }
@@ -46,41 +44,40 @@ const { toast } = useToast();
                 v-slot="{ errors, processing }"
             >
                 <div class="grid gap-2">
-                    <Label for="name">Name</Label>
+                    <Label for="password">Password</Label>
                     <InputDescription>
-                        The name of the role (e.g., 'admin', 'editor').
+                        Password for the user account.
                     </InputDescription>
                     <Input
-                        id="name"
-                        name="name"
-                        type="text"
+                        id="password"
+                        name="password"
+                        type="password"
                         class="mt-1 block w-full"
                         required
-                        autofocus
+                        autocomplete="new-password"
                     />
-                    <InputError :message="errors.name" />
+                    <InputError :message="errors.password" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="guard_name">Guard Name</Label>
+                    <Label for="password_confirmation">Confirm Password</Label>
                     <InputDescription>
-                        The guard name for the role, usually 'web' or 'api'.
+                        Confirm the password for the user account.
                     </InputDescription>
-                    <Select name="guard_name" default-value="api">
-                        <SelectTrigger id="guard_name" class="mt-1 w-full">
-                            <SelectValue placeholder="Select a guard" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="web">web</SelectItem>
-                            <SelectItem value="api">api</SelectItem>
-                        </SelectContent>
-                    </Select>
-                    <InputError :message="errors.guard_name" />
+                    <Input
+                        id="password_confirmation"
+                        name="password_confirmation"
+                        type="password"
+                        class="mt-1 block w-full"
+                        required
+                        autocomplete="new-password"
+                    />
+                    <InputError :message="errors.password_confirmation" />
                 </div>
 
                 <div class="flex justify-end gap-4">
                     <Button :disabled="processing" type="submit">
-                        <Save />
+                        <Save class="mr-2 h-4 w-4" />
                         Save Changes
                     </Button>
                 </div>

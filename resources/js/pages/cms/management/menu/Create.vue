@@ -14,12 +14,13 @@ import {
 } from '@/components/ui/select';
 import { useToast } from '@/composables/useToast';
 import { CommonStatusEnum } from '@/enums/global.enum';
+import { RoleDataItem } from '@/types/cms/management/role';
 import { Form } from '@inertiajs/vue3';
 import { Modal } from '@inertiaui/modal-vue';
 import { Save } from 'lucide-vue-next';
 
-const props = defineProps<{
-    roles: Array<{ id: number; name: string }>;
+defineProps<{
+    roles: RoleDataItem[];
 }>();
 
 const { toast } = useToast();
@@ -127,7 +128,7 @@ const { toast } = useToast();
                         name="order"
                         type="number"
                         class="mt-1 block w-full"
-                        :defaultValue="1"
+                        :default-value="1"
                         required
                     />
                     <InputError :message="errors.order" />
@@ -153,7 +154,7 @@ const { toast } = useToast();
                     <InputDescription>
                         The URL path the menu item points to.
                     </InputDescription>
-                    <Select name="status" :defaultValue="1">
+                    <Select name="status" :default-value="1">
                         <SelectTrigger id="status" class="mt-1 w-full">
                             <SelectValue placeholder="Select status" />
                         </SelectTrigger>

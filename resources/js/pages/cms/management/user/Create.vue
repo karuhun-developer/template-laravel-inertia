@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { store } from '@/actions/App/Http/Controllers/Cms/Management/MenuSubController';
+import { store } from '@/actions/App/Http/Controllers/Cms/Management/UserController';
 import InputDescription from '@/components/InputDescription.vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
@@ -13,15 +13,13 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { useToast } from '@/composables/useToast';
-import { CommonStatusEnum } from '@/enums/global.enum';
+import { RoleDataItem } from '@/types/cms/management/role';
 import { Form } from '@inertiajs/vue3';
 import { Modal } from '@inertiaui/modal-vue';
 import { Save } from 'lucide-vue-next';
 
-import { MenuDataItem } from '@/types/cms/management/menu';
-
 defineProps<{
-    menu: MenuDataItem;
+    roles: RoleDataItem[];
 }>();
 
 const { toast } = useToast();
@@ -29,23 +27,23 @@ const { toast } = useToast();
 
 <template>
     <Modal v-slot="{ close }">
-        <div class="bg-white p-6 dark:bg-zinc-950 dark:text-white">
+        <div class="p-6">
             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                Create Menu Sub
+                Create User
             </h2>
 
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Create a new sub-menu item.
+                Create a new user for the application.
             </p>
 
             <Form
-                v-bind="store.form({ menu: menu.id })"
+                v-bind="store.form()"
                 class="mt-6 space-y-6"
                 @success="
                     () => {
                         toast.fire({
                             icon: 'success',
-                            title: 'Menu Sub created.',
+                            title: 'User created.',
                         });
                         close();
                     }
@@ -53,10 +51,30 @@ const { toast } = useToast();
                 v-slot="{ errors, processing }"
             >
                 <div class="grid gap-2">
-                    <Label for="name">Name</Label>
+                    <Label for="role">Role</Label>
                     <InputDescription>
-                        The name of the sub-menu item.
+                        The name of the role (e.g., 'admin', 'editor').
                     </InputDescription>
+                    <Select name="role">
+                        <SelectTrigger id="role" class="mt-1 w-full">
+                            <SelectValue placeholder="Select a role" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem
+                                v-for="role in roles"
+                                :key="role.id"
+                                :value="role.name"
+                            >
+                                {{ role.name }}
+                            </SelectItem>
+                        </SelectContent>
+                    </Select>
+                    <InputError :message="errors.role" />
+                </div>
+
+                <div class="grid gap-2">
+                    <Label for="name">Name</Label>
+                    <InputDescription> Username of the user. </InputDescription>
                     <Input
                         id="name"
                         name="name"
@@ -69,91 +87,69 @@ const { toast } = useToast();
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="url">URL</Label>
+                    <Label for="guard_name">Email</Label>
                     <InputDescription>
-                        The URL path the sub-menu item points to.
+                        Email address of the user.
                     </InputDescription>
                     <Input
-                        id="url"
-                        name="url"
-                        type="text"
+                        id="email"
+                        name="email"
+                        type="email"
                         class="mt-1 block w-full"
                         required
                     />
-                    <InputError :message="errors.url" />
+                    <InputError :message="errors.email" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="icon">Icon</Label>
+                    <Label for="password">Phone</Label>
                     <InputDescription>
-                        The icon class for the sub-menu item (e.g., 'XSquare').
+                        Phone number of the user.
                     </InputDescription>
                     <Input
-                        id="icon"
-                        name="icon"
+                        id="phone"
+                        name="phone"
                         type="text"
                         class="mt-1 block w-full"
                     />
-                    <InputError :message="errors.icon" />
+                    <InputError :message="errors.phone" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="order">Order</Label>
+                    <Label for="password">Password</Label>
                     <InputDescription>
-                        The display order of the sub-menu item.
+                        Password for the user account.
                     </InputDescription>
                     <Input
-                        id="order"
-                        name="order"
-                        type="number"
+                        id="password"
+                        name="password"
+                        type="password"
                         class="mt-1 block w-full"
-                        :default-value="1"
                         required
+                        autocomplete="new-password"
                     />
-                    <InputError :message="errors.order" />
+                    <InputError :message="errors.password" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="active_pattern">Active Pattern</Label>
+                    <Label for="password_confirmation">Confirm Password</Label>
                     <InputDescription>
-                        The URL pattern to determine when the menu item is
-                        active (e.g., '/cms/management/menu').
+                        Confirm the password for the user account.
                     </InputDescription>
                     <Input
-                        id="active_pattern"
-                        name="active_pattern"
-                        type="text"
+                        id="password_confirmation"
+                        name="password_confirmation"
+                        type="password"
                         class="mt-1 block w-full"
+                        required
+                        autocomplete="new-password"
                     />
-                    <InputError :message="errors.active_pattern" />
-                </div>
-
-                <div class="grid gap-2">
-                    <Label for="status">Status</Label>
-                    <InputDescription>
-                        The URL path the menu item points to.
-                    </InputDescription>
-                    <Select name="status" :default-value="1">
-                        <SelectTrigger id="status" class="mt-1 w-full">
-                            <SelectValue placeholder="Select status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <template
-                                v-for="commnStatus in CommonStatusEnum"
-                                :key="commnStatus.value"
-                            >
-                                <SelectItem :value="commnStatus.value">
-                                    {{ commnStatus.label }}
-                                </SelectItem>
-                            </template>
-                        </SelectContent>
-                    </Select>
-                    <InputError :message="errors.status" />
+                    <InputError :message="errors.password_confirmation" />
                 </div>
 
                 <div class="flex justify-end gap-4">
                     <Button :disabled="processing" type="submit">
-                        <Save class="mr-2 h-4 w-4" />
+                        <Save />
                         Save Changes
                     </Button>
                 </div>

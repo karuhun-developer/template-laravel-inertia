@@ -20,7 +20,7 @@ import { Form } from '@inertiajs/vue3';
 import { Modal } from '@inertiaui/modal-vue';
 import { Save } from 'lucide-vue-next';
 
-const props = defineProps<{
+defineProps<{
     subMenu: MenuSubDataItem;
     menu: MenuDataItem;
 }>();

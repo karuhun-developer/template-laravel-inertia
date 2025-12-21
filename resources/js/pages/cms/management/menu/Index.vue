@@ -20,7 +20,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/id';
 import { ListOrdered, Pencil, Plus, Trash2 } from 'lucide-vue-next';
 
-const props = defineProps<{
+defineProps<{
     data: PaginationItem<MenuDataItem>;
     order: 'asc' | 'desc';
     orderBy: string;
@@ -149,9 +149,9 @@ const columns = [
                         >
                             <Button
                                 size="sm"
-                                class="h-8 bg-blue-500 px-2 text-white hover:bg-blue-600"
+                                class="h-8 bg-yellow-500 px-2 text-black hover:bg-yellow-600"
                             >
-                                <ListOrdered class="mr-2 h-4 w-4" />
+                                <ListOrdered class="h-4 w-4" />
                                 Sub Menu
                             </Button>
                         </Link>

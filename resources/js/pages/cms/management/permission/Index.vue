@@ -19,7 +19,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/id';
 import { Pencil, Plus, Trash2 } from 'lucide-vue-next';
 
-const props = defineProps<{
+defineProps<{
     data: PaginationItem<PermissionDataItem>;
     orderBy?: string;
     order?: 'asc' | 'desc';
