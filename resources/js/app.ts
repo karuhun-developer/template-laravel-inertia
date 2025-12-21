@@ -34,7 +34,7 @@ putConfig({
         closeExplicitly: false,
         maxWidth: '2xl',
         paddingClasses: 'p-4 sm:p-6',
-        panelClasses: 'bg-white rounded',
+        panelClasses: 'bg-(--background) rounded dark:bg-gray-800',
         position: 'center',
     },
     slideover: {
@@ -42,7 +42,7 @@ putConfig({
         closeExplicitly: false,
         maxWidth: 'md',
         paddingClasses: 'p-4 sm:p-6',
-        panelClasses: 'bg-white min-h-screen',
+        panelClasses: 'bg-(--background) min-h-screen border-l',
         position: 'right',
     },
 });

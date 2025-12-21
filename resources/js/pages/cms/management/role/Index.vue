@@ -4,6 +4,7 @@ import {
     destroy,
     edit,
 } from '@/actions/App/Http/Controllers/Cms/Management/RoleController';
+import { index as rolePermission } from '@/actions/App/Http/Controllers/Cms/Management/RolePermissionController';
 import Heading from '@/components/Heading.vue';
 import ResourceTable from '@/components/ResourceTable.vue';
 import { Button } from '@/components/ui/button';
@@ -13,11 +14,11 @@ import { useToast } from '@/composables/useToast';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { PaginationItem, type BreadcrumbItem } from '@/types';
 import { RoleDataItem } from '@/types/cms/management/role';
-import { Head, router } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import { ModalLink } from '@inertiaui/modal-vue';
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
-import { Pencil, Plus, Trash2 } from 'lucide-vue-next';
+import { Pencil, Plus, ShieldCheck, Trash2 } from 'lucide-vue-next';
 
 const props = defineProps<{
     data: PaginationItem<RoleDataItem>;
@@ -100,6 +101,18 @@ const breadcrumbItems: BreadcrumbItem[] = [
                                 <Pencil class="h-4 w-4" />
                             </Button>
                         </ModalLink>
+                        <Link
+                            :href="rolePermission({ role: row.id })"
+                            v-if="hasPermission('validate' + resource)"
+                        >
+                            <Button
+                                size="sm"
+                                class="h-8 bg-yellow-500 px-2 text-black hover:bg-yellow-600"
+                            >
+                                <ShieldCheck class="mr-2 h-4 w-4" />
+                                Permissions
+                            </Button>
+                        </Link>
                         <Button
                             variant="ghost"
                             size="icon"
