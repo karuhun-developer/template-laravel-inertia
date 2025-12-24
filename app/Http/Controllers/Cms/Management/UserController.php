@@ -2,7 +2,14 @@
 
 namespace App\Http\Controllers\Cms\Management;
 
+use App\Actions\Cms\User\DeleteUserAction;
+use App\Actions\Cms\User\StoreUserAction;
+use App\Actions\Cms\User\UpdateUserAction;
+use App\Actions\Cms\User\UpdateUserPasswordAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Cms\User\StoreUserRequest;
+use App\Http\Requests\Cms\User\UpdateUserPasswordRequest;
+use App\Http\Requests\Cms\User\UpdateUserRequest;
 use App\Models\Spatie\Role;
 use App\Models\User;
 use App\Traits\WithGetFilterData;
@@ -78,20 +85,11 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request, StoreUserAction $action)
     {
         Gate::authorize('create'.$this->resource);
 
-        $validated = $request->validate([
-            'role' => 'required|exists:roles,name',
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email',
-            'phone' => 'nullable|string|max:20|unique:users,phone',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
-
-        $user = User::create($validated);
-        $user->syncRoles([$request->role]);
+        $action->handle($request->validated());
 
         return back();
     }
@@ -123,19 +121,11 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateUserRequest $request, User $user, UpdateUserAction $action)
     {
         Gate::authorize('update'.$this->resource);
 
-        $validated = $request->validate([
-            'role' => 'required|exists:roles,name',
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
-            'phone' => 'nullable|string|max:20|unique:users,phone,'.$user->id,
-        ]);
-
-        $user->update($validated);
-        $user->syncRoles([$request->role]);
+        $action->handle($user, $request->validated());
 
         return back();
     }
@@ -143,11 +133,11 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(User $user, DeleteUserAction $action)
     {
         Gate::authorize('delete'.$this->resource);
 
-        $user->delete();
+        $action->handle($user);
 
         return back();
     }
@@ -167,15 +157,11 @@ class UserController extends Controller
     /**
      * Update the password of the specified resource in storage.
      */
-    public function updatePassword(Request $request, User $user)
+    public function updatePassword(UpdateUserPasswordRequest $request, User $user, UpdateUserPasswordAction $action)
     {
         Gate::authorize('update'.$this->resource);
 
-        $validated = $request->validate([
-            'password' => 'required|string|min:8|confirmed',
-        ]);
-
-        $user->update($validated);
+        $action->handle($user, $request->validated());
 
         return back();
     }

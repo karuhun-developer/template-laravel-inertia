@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers\Cms\Management;
 
+use App\Actions\Cms\Role\DeleteRoleAction;
+use App\Actions\Cms\Role\StoreRoleAction;
+use App\Actions\Cms\Role\UpdateRoleAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Cms\Role\StoreRoleRequest;
+use App\Http\Requests\Cms\Role\UpdateRoleRequest;
 use App\Models\Spatie\Role;
 use App\Traits\WithGetFilterData;
 use Illuminate\Http\Request;
@@ -61,16 +66,11 @@ class RoleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRoleRequest $request, StoreRoleAction $action)
     {
         Gate::authorize('create'.$this->resource);
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:roles,name',
-            'guard_name' => 'required|string|max:255',
-        ]);
-
-        Role::create($validated);
+        $action->handle($request->validated());
 
         return back();
     }
@@ -98,16 +98,11 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Role $role)
+    public function update(UpdateRoleRequest $request, Role $role, UpdateRoleAction $action)
     {
         Gate::authorize('update'.$this->resource);
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:roles,name,'.$role->id,
-            'guard_name' => 'required|string|max:255',
-        ]);
-
-        $role->update($validated);
+        $action->handle($role, $request->validated());
 
         return back();
     }
@@ -115,11 +110,11 @@ class RoleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Role $role)
+    public function destroy(Role $role, DeleteRoleAction $action)
     {
         Gate::authorize('delete'.$this->resource);
 
-        $role->delete();
+        $action->handle($role);
 
         return back();
     }

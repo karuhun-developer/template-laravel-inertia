@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers\Cms\Management;
 
+use App\Actions\Cms\Menu\DeleteMenuAction;
+use App\Actions\Cms\Menu\StoreMenuAction;
+use App\Actions\Cms\Menu\UpdateMenuAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Cms\Menu\StoreMenuRequest;
+use App\Http\Requests\Cms\Menu\UpdateMenuRequest;
 use App\Models\Menu\Menu;
 use App\Models\Spatie\Role;
 use App\Traits\WithGetFilterData;
@@ -78,21 +83,11 @@ class MenuController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreMenuRequest $request, StoreMenuAction $action)
     {
         Gate::authorize('create'.$this->resource);
 
-        $validated = $request->validate([
-            'role_id' => 'required|exists:roles,id',
-            'name' => 'required|string|max:255',
-            'icon' => 'nullable|string|max:255',
-            'url' => 'required|string|max:255',
-            'order' => 'required|integer',
-            'active_pattern' => 'nullable|string|max:255',
-            'status' => 'required|boolean',
-        ]);
-
-        Menu::create($validated);
+        $action->handle($request->validated());
 
         return back();
     }
@@ -121,21 +116,11 @@ class MenuController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Menu $menu)
+    public function update(UpdateMenuRequest $request, Menu $menu, UpdateMenuAction $action)
     {
         Gate::authorize('update'.$this->resource);
 
-        $validated = $request->validate([
-            'role_id' => 'required|exists:roles,id',
-            'name' => 'required|string|max:255',
-            'icon' => 'nullable|string|max:255',
-            'url' => 'required|string|max:255',
-            'order' => 'required|integer',
-            'active_pattern' => 'nullable|string|max:255',
-            'status' => 'required|boolean',
-        ]);
-
-        $menu->update($validated);
+        $action->handle($menu, $request->validated());
 
         return back();
     }
@@ -143,11 +128,11 @@ class MenuController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Menu $menu)
+    public function destroy(Menu $menu, DeleteMenuAction $action)
     {
         Gate::authorize('delete'.$this->resource);
 
-        $menu->delete();
+        $action->handle($menu);
 
         return back();
     }

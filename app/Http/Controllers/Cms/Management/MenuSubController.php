@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers\Cms\Management;
 
+use App\Actions\Cms\MenuSub\DeleteMenuSubAction;
+use App\Actions\Cms\MenuSub\StoreMenuSubAction;
+use App\Actions\Cms\MenuSub\UpdateMenuSubAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Cms\MenuSub\StoreMenuSubRequest;
+use App\Http\Requests\Cms\MenuSub\UpdateMenuSubRequest;
 use App\Models\Menu\Menu;
 use App\Models\Menu\MenuSub;
-use App\Models\Spatie\Role;
 use App\Traits\WithGetFilterData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -81,23 +85,15 @@ class MenuSubController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Menu $menu)
+    public function store(StoreMenuSubRequest $request, Menu $menu, StoreMenuSubAction $action)
     {
         Gate::authorize('create'.$this->resource);
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'icon' => 'nullable|string|max:255',
-            'url' => 'required|string|max:255',
-            'order' => 'required|integer',
-            'active_pattern' => 'nullable|string|max:255',
-            'status' => 'required|boolean',
-        ]);
+        $data = $request->validated();
+        $data['menu_id'] = $menu->id;
+        $data['role_id'] = $menu->role_id;
 
-        $validated['menu_id'] = $menu->id;
-        $validated['role_id'] = $menu->role_id;
-
-        MenuSub::create($validated);
+        $action->handle($data);
 
         return back();
     }
@@ -126,20 +122,11 @@ class MenuSubController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Menu $menu, MenuSub $subMenu)
+    public function update(UpdateMenuSubRequest $request, Menu $menu, MenuSub $subMenu, UpdateMenuSubAction $action)
     {
         Gate::authorize('update'.$this->resource);
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'icon' => 'nullable|string|max:255',
-            'url' => 'required|string|max:255',
-            'order' => 'required|integer',
-            'active_pattern' => 'nullable|string|max:255',
-            'status' => 'required|boolean',
-        ]);
-
-        $subMenu->update($validated);
+        $action->handle($subMenu, $request->validated());
 
         return back();
     }
@@ -147,11 +134,11 @@ class MenuSubController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Menu $menu, MenuSub $subMenu)
+    public function destroy(Menu $menu, MenuSub $subMenu, DeleteMenuSubAction $action)
     {
         Gate::authorize('delete'.$this->resource);
 
-        $subMenu->delete();
+        $action->handle($subMenu);
 
         return back();
     }

@@ -40,23 +40,27 @@ class HandleInertiaRequests extends Middleware
     {
         [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
 
+        // User and role
+        $user = $request->user();
+        $role = $user ? $user->roles()->first() : null;
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
-                'user' => $request->user() ? Cache::flexible('auth:user:'.$request->user()->id, [300, 600], function () use ($request) {
+                'user' => $user ? Cache::flexible('auth:user:'.$user->id, [300, 600], function () use ($user) {
                     return [
-                        'id' => $request->user()->id,
-                        'name' => $request->user()->name,
-                        'email' => $request->user()->email,
-                        'phone' => $request->user()->phone,
-                        'permissions' => $request->user()->getAllPermissions()->pluck('name'),
-                        'roles' => $request->user()->getRoleNames(),
+                        'id' => $user->id,
+                        'name' => $user->name,
+                        'email' => $user->email,
+                        'phone' => $user->phone,
+                        'permissions' => $user->getAllPermissions()->pluck('name'),
+                        'roles' => $user->getRoleNames(),
                     ];
                 }) : null,
-                'menus' => $request->user() ? Cache::flexible('auth:menu:'.$request->user()->id, [300, 600], function () use ($request) {
-                    return Menu::with('subMenu')->where('role_id', $request->user()->roles()->first()->id)->orderBy('order', 'asc')->get();
+                'menus' => $user ? Cache::flexible('menus:role:'.$role->id, [300, 600], function () use ($role) {
+                    return Menu::with('subMenu')->where('role_id', $role->id)->orderBy('order', 'asc')->get();
                 }) : null,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',

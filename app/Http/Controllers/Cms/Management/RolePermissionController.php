@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Cms\Management;
 
+use App\Actions\Cms\RolePermission\UpdateRolePermissionsAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Cms\RolePermission\UpdateRolePermissionRequest;
 use App\Models\Spatie\Permission;
 use App\Models\Spatie\Role;
 use Spatie\Permission\Models\Role as SpatieRole;
@@ -54,40 +56,38 @@ class RolePermissionController extends Controller
         return $permissions;
     }
 
-    public function checkAllPermissions(SpatieRole $role)
+    public function checkAllPermissions(SpatieRole $role, UpdateRolePermissionsAction $action)
     {
         Gate::authorize('update'.$this->resource);
 
-        $role->syncPermissions(Permission::all()->pluck('name')->toArray());
+        $action->assignAll($role);
 
         return back();
     }
 
-    public function uncheckAllPermissions(SpatieRole $role)
+    public function uncheckAllPermissions(SpatieRole $role, UpdateRolePermissionsAction $action)
     {
         Gate::authorize('update'.$this->resource);
 
-        $role->syncPermissions([]);
+        $action->revokeAll($role);
 
         return back();
     }
 
-    public function checkPermissions(Request $request, SpatieRole $role)
+    public function checkPermissions(UpdateRolePermissionRequest $request, SpatieRole $role, UpdateRolePermissionsAction $action)
     {
         Gate::authorize('update'.$this->resource);
 
-        $permission = Permission::where('name', $request->permission)->firstOrFail();
-        $role->givePermissionTo($request->permission);
+        $action->assign($role, $request->permission);
 
         return back();
     }
 
-    public function uncheckPermissions(Request $request, SpatieRole $role)
+    public function uncheckPermissions(UpdateRolePermissionRequest $request, SpatieRole $role, UpdateRolePermissionsAction $action)
     {
         Gate::authorize('update'.$this->resource);
 
-        $permission = Permission::where('name', $request->permission)->firstOrFail();
-        $role->revokePermissionTo($request->permission);
+        $action->revoke($role, $request->permission);
 
         return back();
     }
