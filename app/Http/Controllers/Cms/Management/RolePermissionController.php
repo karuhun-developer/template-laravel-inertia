@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Cms\Management;
 
-use App\Actions\Cms\RolePermission\UpdateRolePermissionsAction;
+use App\Actions\Cms\Management\RolePermission\UpdateRolePermissionsAction;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Cms\RolePermission\UpdateRolePermissionRequest;
+use App\Http\Requests\Cms\Management\RolePermission\UpdateRolePermissionRequest;
 use App\Models\Spatie\Permission;
 use App\Models\Spatie\Role;
 use Spatie\Permission\Models\Role as SpatieRole;

@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Cms\Management;
 
-use App\Actions\Cms\User\DeleteUserAction;
-use App\Actions\Cms\User\StoreUserAction;
-use App\Actions\Cms\User\UpdateUserAction;
-use App\Actions\Cms\User\UpdateUserPasswordAction;
+use App\Actions\Cms\Management\User\DeleteUserAction;
+use App\Actions\Cms\Management\User\StoreUserAction;
+use App\Actions\Cms\Management\User\UpdateUserAction;
+use App\Actions\Cms\Management\User\UpdateUserPasswordAction;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Cms\User\StoreUserRequest;
-use App\Http\Requests\Cms\User\UpdateUserPasswordRequest;
-use App\Http\Requests\Cms\User\UpdateUserRequest;
+use App\Http\Requests\Cms\Management\User\StoreUserRequest;
+use App\Http\Requests\Cms\Management\User\UpdateUserPasswordRequest;
+use App\Http\Requests\Cms\Management\User\UpdateUserRequest;
 use App\Models\Spatie\Role;
 use App\Models\User;
 use App\Traits\WithGetFilterData;

@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Cms\Management;
 
-use App\Actions\Cms\Menu\DeleteMenuAction;
-use App\Actions\Cms\Menu\StoreMenuAction;
-use App\Actions\Cms\Menu\UpdateMenuAction;
+use App\Actions\Cms\Management\Menu\DeleteMenuAction;
+use App\Actions\Cms\Management\Menu\StoreMenuAction;
+use App\Actions\Cms\Management\Menu\UpdateMenuAction;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Cms\Menu\StoreMenuRequest;
-use App\Http\Requests\Cms\Menu\UpdateMenuRequest;
+use App\Http\Requests\Cms\Management\Menu\StoreMenuRequest;
+use App\Http\Requests\Cms\Management\Menu\UpdateMenuRequest;
 use App\Models\Menu\Menu;
 use App\Models\Spatie\Role;
 use App\Traits\WithGetFilterData;
