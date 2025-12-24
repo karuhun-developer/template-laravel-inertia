@@ -8,7 +8,6 @@ use App\Models\Spatie\Role;
 use Spatie\Permission\Models\Role as SpatieRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use Inertia\Inertia;
 
 class RolePermissionController extends Controller
 {
@@ -20,7 +19,7 @@ class RolePermissionController extends Controller
 
         return inertia('cms/management/role/Permission', [
             'role' => $role,
-            'permissions' => Inertia::defer(fn () => $this->getPermissions($role)),
+            'permissions' => inertia()->defer(fn () => $this->getPermissions($role)),
         ]);
     }
 
