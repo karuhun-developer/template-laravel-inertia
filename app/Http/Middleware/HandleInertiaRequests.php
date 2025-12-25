@@ -59,9 +59,9 @@ class HandleInertiaRequests extends Middleware
                         'roles' => $user->getRoleNames(),
                     ];
                 }) : null,
-                'menus' => $user ? Cache::flexible('menus:role:'.$role->id, [300, 600], function () use ($role) {
+                'menus' => ($user && $role) ? Cache::flexible('menus:role:'.$role->id, [300, 600], function () use ($role) {
                     return Menu::with('subMenu')->where('role_id', $role->id)->orderBy('order', 'asc')->get();
-                }) : null,
+                }) : [],
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];

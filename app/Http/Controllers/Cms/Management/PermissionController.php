@@ -55,6 +55,8 @@ class PermissionController extends Controller
      */
     public function create()
     {
+        Gate::authorize('create'.$this->resource);
+
         return inertia('cms/management/permission/Create');
     }
 

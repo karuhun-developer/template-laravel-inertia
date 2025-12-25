@@ -15,7 +15,7 @@ class UpdateRolePermissionsAction
      */
     public function assignAll(Role $role): void
     {
-        $role->syncPermissions(Permission::all());
+        $role->syncPermissions(Permission::all()->pluck('name')->toArray());
     }
 
     /**
