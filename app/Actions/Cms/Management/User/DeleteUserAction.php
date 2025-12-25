@@ -8,9 +8,6 @@ class DeleteUserAction
 {
     /**
      * Handle the action.
-     *
-     * @param User $user
-     * @return bool|null
      */
     public function handle(User $user): ?bool
     {

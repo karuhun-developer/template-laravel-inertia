@@ -8,9 +8,6 @@ class DeleteRoleAction
 {
     /**
      * Handle the action.
-     *
-     * @param Role $role
-     * @return bool|null
      */
     public function handle(Role $role): ?bool
     {

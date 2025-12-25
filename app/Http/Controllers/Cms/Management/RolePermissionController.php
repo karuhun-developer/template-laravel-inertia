@@ -7,9 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Cms\Management\RolePermission\UpdateRolePermissionRequest;
 use App\Models\Spatie\Permission;
 use App\Models\Spatie\Role;
-use Spatie\Permission\Models\Role as SpatieRole;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Spatie\Permission\Models\Role as SpatieRole;
 
 class RolePermissionController extends Controller
 {
@@ -26,9 +25,7 @@ class RolePermissionController extends Controller
     }
 
     /**
-     *
      * Get all permissions.
-     *
      */
     private function getPermissions(SpatieRole $role)
     {

@@ -14,7 +14,7 @@ test('assign all permissions action assigns all permissions', function () {
     Permission::create(['name' => 'perm1', 'guard_name' => 'api']);
     Permission::create(['name' => 'perm2', 'guard_name' => 'api']);
 
-    $action = new UpdateRolePermissionsAction();
+    $action = new UpdateRolePermissionsAction;
     $action->assignAll($role);
 
     expect($role->refresh()->permissions->count())->toBe(2);
@@ -28,7 +28,7 @@ test('revoke all permissions action revokes all permissions', function () {
     $p1 = Permission::create(['name' => 'perm1', 'guard_name' => 'api']);
     $role->givePermissionTo($p1);
 
-    $action = new UpdateRolePermissionsAction();
+    $action = new UpdateRolePermissionsAction;
     $action->revokeAll($role);
 
     expect($role->refresh()->permissions->count())->toBe(0);
@@ -39,7 +39,7 @@ test('assign permission action assigns specific permission', function () {
     $role = Role::create(['name' => 'Test Role', 'guard_name' => 'api']);
     Permission::create(['name' => 'perm1', 'guard_name' => 'api']);
 
-    $action = new UpdateRolePermissionsAction();
+    $action = new UpdateRolePermissionsAction;
     $action->assign($role, 'perm1');
 
     expect($role->refresh()->hasPermissionTo('perm1'))->toBeTrue();
@@ -51,7 +51,7 @@ test('revoke permission action revokes specific permission', function () {
     $p1 = Permission::create(['name' => 'perm1', 'guard_name' => 'api']);
     $role->givePermissionTo($p1);
 
-    $action = new UpdateRolePermissionsAction();
+    $action = new UpdateRolePermissionsAction;
     $action->revoke($role, 'perm1');
 
     expect($role->refresh()->hasPermissionTo('perm1'))->toBeFalse();

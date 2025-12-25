@@ -8,9 +8,6 @@ class StoreMenuSubAction
 {
     /**
      * Handle the action.
-     *
-     * @param array $data
-     * @return MenuSub
      */
     public function handle(array $data): MenuSub
     {

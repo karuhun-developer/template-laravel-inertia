@@ -8,9 +8,6 @@ class DeleteMenuSubAction
 {
     /**
      * Handle the action.
-     *
-     * @param MenuSub $menuSub
-     * @return bool|null
      */
     public function handle(MenuSub $menuSub): ?bool
     {

@@ -8,10 +8,6 @@ class UpdateUserPasswordAction
 {
     /**
      * Handle the action.
-     *
-     * @param User $user
-     * @param array $data
-     * @return bool
      */
     public function handle(User $user, array $data): bool
     {

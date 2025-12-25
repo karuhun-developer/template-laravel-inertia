@@ -1,8 +1,8 @@
 <?php
 
+use App\Actions\Cms\Management\Menu\DeleteMenuAction;
 use App\Actions\Cms\Management\Menu\StoreMenuAction;
 use App\Actions\Cms\Management\Menu\UpdateMenuAction;
-use App\Actions\Cms\Management\Menu\DeleteMenuAction;
 use App\Models\Menu\Menu;
 use App\Models\Spatie\Role;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -12,7 +12,7 @@ uses(TestCase::class, RefreshDatabase::class);
 
 test('store menu action creates a menu', function () {
     $role = Role::create(['name' => 'Test Role', 'guard_name' => 'api']);
-    $action = new StoreMenuAction();
+    $action = new StoreMenuAction;
     $data = [
         'name' => 'Test Menu',
         'url' => '#',
@@ -38,7 +38,7 @@ test('update menu action updates a menu', function () {
         'order' => 1,
         'role_id' => $role->id,
     ]);
-    $action = new UpdateMenuAction();
+    $action = new UpdateMenuAction;
     $data = [
         'name' => 'New Name',
         'url' => '/new',
@@ -64,7 +64,7 @@ test('delete menu action deletes a menu', function () {
         'order' => 1,
         'role_id' => $role->id,
     ]);
-    $action = new DeleteMenuAction();
+    $action = new DeleteMenuAction;
 
     $result = $action->handle($menu);
 

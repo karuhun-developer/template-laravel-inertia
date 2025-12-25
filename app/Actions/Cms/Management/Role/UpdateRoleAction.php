@@ -8,10 +8,6 @@ class UpdateRoleAction
 {
     /**
      * Handle the action.
-     *
-     * @param Role $role
-     * @param array $data
-     * @return bool
      */
     public function handle(Role $role, array $data): bool
     {

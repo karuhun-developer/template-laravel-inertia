@@ -8,9 +8,6 @@ class StoreUserAction
 {
     /**
      * Handle the action.
-     *
-     * @param array $data
-     * @return User
      */
     public function handle(array $data): User
     {

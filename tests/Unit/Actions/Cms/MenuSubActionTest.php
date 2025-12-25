@@ -1,8 +1,8 @@
 <?php
 
+use App\Actions\Cms\Management\MenuSub\DeleteMenuSubAction;
 use App\Actions\Cms\Management\MenuSub\StoreMenuSubAction;
 use App\Actions\Cms\Management\MenuSub\UpdateMenuSubAction;
-use App\Actions\Cms\Management\MenuSub\DeleteMenuSubAction;
 use App\Models\Menu\Menu;
 use App\Models\Menu\MenuSub;
 use App\Models\Spatie\Role;
@@ -22,7 +22,7 @@ test('store menu sub action creates a sub menu', function () {
         'role_id' => $role->id,
     ]);
 
-    $action = new StoreMenuSubAction();
+    $action = new StoreMenuSubAction;
     $data = [
         'name' => 'Test Sub Menu',
         'url' => '#',
@@ -59,7 +59,7 @@ test('update menu sub action updates a sub menu', function () {
         'role_id' => $role->id,
     ]);
 
-    $action = new UpdateMenuSubAction();
+    $action = new UpdateMenuSubAction;
     $data = [
         'name' => 'New Name',
         'url' => '/new',
@@ -96,7 +96,7 @@ test('delete menu sub action deletes a sub menu', function () {
         'role_id' => $role->id,
     ]);
 
-    $action = new DeleteMenuSubAction();
+    $action = new DeleteMenuSubAction;
 
     $result = $action->handle($menuSub);
 

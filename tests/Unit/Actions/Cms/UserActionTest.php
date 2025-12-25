@@ -1,11 +1,11 @@
 <?php
 
+use App\Actions\Cms\Management\User\DeleteUserAction;
 use App\Actions\Cms\Management\User\StoreUserAction;
 use App\Actions\Cms\Management\User\UpdateUserAction;
-use App\Actions\Cms\Management\User\DeleteUserAction;
 use App\Actions\Cms\Management\User\UpdateUserPasswordAction;
-use App\Models\User;
 use App\Models\Spatie\Role;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -14,7 +14,7 @@ uses(TestCase::class, RefreshDatabase::class);
 
 test('store user action creates a user with role', function () {
     $role = Role::create(['name' => 'Test Role', 'guard_name' => 'api']);
-    $action = new StoreUserAction();
+    $action = new StoreUserAction;
     $data = [
         'name' => 'Test User',
         'email' => 'test@example.com',
@@ -30,7 +30,7 @@ test('store user action creates a user with role', function () {
 });
 
 test('store user action creates a user without role', function () {
-    $action = new StoreUserAction();
+    $action = new StoreUserAction;
     $data = [
         'name' => 'Test User No Role',
         'email' => 'norole@example.com',
@@ -47,11 +47,11 @@ test('store user action creates a user without role', function () {
 test('update user action updates user details and role', function () {
     $roleOld = Role::create(['name' => 'Old Role', 'guard_name' => 'api']);
     $roleNew = Role::create(['name' => 'New Role', 'guard_name' => 'api']);
-    
+
     $user = User::factory()->create();
     $user->assignRole('Old Role');
 
-    $action = new UpdateUserAction();
+    $action = new UpdateUserAction;
     $data = [
         'name' => 'Updated Name',
         'email' => 'updated@example.com',
@@ -68,7 +68,7 @@ test('update user action updates user details and role', function () {
 
 test('delete user action deletes a user', function () {
     $user = User::factory()->create();
-    $action = new DeleteUserAction();
+    $action = new DeleteUserAction;
 
     $result = $action->handle($user);
 
@@ -80,8 +80,8 @@ test('update user password action updates password', function () {
     $user = User::factory()->create([
         'password' => Hash::make('old-password'),
     ]);
-    
-    $action = new UpdateUserPasswordAction();
+
+    $action = new UpdateUserPasswordAction;
     $data = ['password' => 'new-password'];
 
     $result = $action->handle($user, $data);
