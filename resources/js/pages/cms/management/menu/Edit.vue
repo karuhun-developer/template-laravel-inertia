@@ -161,7 +161,7 @@ const { toast } = useToast();
                 <div class="grid gap-2">
                     <Label for="status">Status</Label>
                     <InputDescription>
-                        The URL path the menu item points to.
+                        Status of the menu item (Active or Inactive).
                     </InputDescription>
                     <Select name="status" :default-value="Number(menu.status)">
                         <SelectTrigger id="status" class="mt-1 w-full">
