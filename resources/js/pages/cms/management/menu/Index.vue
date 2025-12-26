@@ -17,7 +17,6 @@ import { MenuDataItem } from '@/types/cms/management/menu';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { ModalLink } from '@inertiaui/modal-vue';
 import dayjs from 'dayjs';
-import 'dayjs/locale/id';
 import { ListOrdered, Pencil, Plus, Trash2 } from 'lucide-vue-next';
 
 defineProps<{

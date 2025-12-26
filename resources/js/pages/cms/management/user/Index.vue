@@ -17,7 +17,6 @@ import { UserDataItem } from '@/types/cms/management/user';
 import { Head, router } from '@inertiajs/vue3';
 import { ModalLink } from '@inertiaui/modal-vue';
 import dayjs from 'dayjs';
-import 'dayjs/locale/id';
 import { KeyRound, Pencil, Plus, Trash2 } from 'lucide-vue-next';
 
 defineProps<{

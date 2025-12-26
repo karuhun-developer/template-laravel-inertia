@@ -17,7 +17,6 @@ import { RoleDataItem } from '@/types/cms/management/role';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { ModalLink } from '@inertiaui/modal-vue';
 import dayjs from 'dayjs';
-import 'dayjs/locale/id';
 import { Pencil, Plus, ShieldCheck, Trash2 } from 'lucide-vue-next';
 
 defineProps<{

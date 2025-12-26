@@ -16,7 +16,6 @@ import { PermissionDataItem } from '@/types/cms/management/permission';
 import { Head, router } from '@inertiajs/vue3';
 import { ModalLink } from '@inertiaui/modal-vue';
 import dayjs from 'dayjs';
-import 'dayjs/locale/id';
 import { Pencil, Plus, Trash2 } from 'lucide-vue-next';
 
 defineProps<{
