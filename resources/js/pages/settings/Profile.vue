@@ -1,19 +1,18 @@
 <script setup lang="ts">
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
-import { useToast } from '@/composables/useToast';
-import { edit } from '@/routes/profile';
-import { send } from '@/routes/verification';
-import { Form, Head, Link, usePage } from '@inertiajs/vue3';
-
 import DeleteUser from '@/components/DeleteUser.vue';
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useSwal } from '@/composables/useSwal';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
+import { edit } from '@/routes/profile';
+import { send } from '@/routes/verification';
 import { type BreadcrumbItem } from '@/types';
+import { Form, Head, Link, usePage } from '@inertiajs/vue3';
 
 interface Props {
     mustVerifyEmail: boolean;
@@ -32,7 +31,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
 const page = usePage();
 const user = page.props.auth.user;
 
-const { toast } = useToast();
+const { toast } = useSwal();
 </script>
 
 <template>

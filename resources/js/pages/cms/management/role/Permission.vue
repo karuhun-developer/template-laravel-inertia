@@ -12,7 +12,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useToast } from '@/composables/useToast';
+import { useSwal } from '@/composables/useSwal';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem } from '@/types';
 import { RoleDataItem } from '@/types/cms/management';
@@ -24,7 +24,7 @@ const props = defineProps<{
     permissions?: Record<string, Record<string, boolean>>;
 }>();
 
-const { toast } = useToast();
+const { toast } = useSwal();
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {

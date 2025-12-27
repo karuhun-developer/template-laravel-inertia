@@ -8,9 +8,8 @@ import {
 import Heading from '@/components/Heading.vue';
 import ResourceTable from '@/components/ResourceTable.vue';
 import { Button } from '@/components/ui/button';
-import { useConfirm } from '@/composables/useConfirm';
 import { usePermission } from '@/composables/usePermission';
-import { useToast } from '@/composables/useToast';
+import { useSwal } from '@/composables/useSwal';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem, PaginationItem } from '@/types';
 import { MenuDataItem, MenuSubDataItem } from '@/types/cms/management';
@@ -30,8 +29,7 @@ const props = defineProps<{
     menu: MenuDataItem;
 }>();
 
-const { confirm } = useConfirm();
-const { toast } = useToast();
+const { confirm, toast } = useSwal();
 const { hasPermission } = usePermission();
 
 const title = props.menu.name + ' Sub Menu';

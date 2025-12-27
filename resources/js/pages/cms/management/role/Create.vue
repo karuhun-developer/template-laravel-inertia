@@ -12,12 +12,12 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { useToast } from '@/composables/useToast';
+import { useSwal } from '@/composables/useSwal';
 import { Form } from '@inertiajs/vue3';
 import { Modal } from '@inertiaui/modal-vue';
 import { Save } from 'lucide-vue-next';
 
-const { toast } = useToast();
+const { toast } = useSwal();
 </script>
 
 <template>

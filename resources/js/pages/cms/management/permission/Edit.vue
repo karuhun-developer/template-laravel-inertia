@@ -12,7 +12,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { useToast } from '@/composables/useToast';
+import { useSwal } from '@/composables/useSwal';
 import { PermissionDataItem } from '@/types/cms/management';
 import { Form } from '@inertiajs/vue3';
 import { Modal } from '@inertiaui/modal-vue';
@@ -22,7 +22,7 @@ defineProps<{
     permission: PermissionDataItem;
 }>();
 
-const { toast } = useToast();
+const { toast } = useSwal();
 </script>
 
 <template>

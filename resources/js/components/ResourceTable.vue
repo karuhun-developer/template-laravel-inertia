@@ -16,6 +16,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import { useFilter } from '@/composables/useFilter';
 import { PaginationItem } from '@/types';
 import { router } from '@inertiajs/vue3';
 import { useDebounceFn } from '@vueuse/core';
@@ -51,6 +52,8 @@ const props = withDefaults(
     },
 );
 
+const { updateParams } = useFilter();
+
 const emit = defineEmits<{
     'update:search': [value: string];
     'update:order': [value: 'asc' | 'desc'];
@@ -85,24 +88,6 @@ const handleSort = (key: string) => {
 const handlePaginate = (value: number) => {
     emit('update:paginate', value);
     updateParams({ paginate: value, page: 1 });
-};
-
-const updateParams = (newParams: Record<string, any>) => {
-    const currentParams = Object.fromEntries(
-        new URLSearchParams(window.location.search).entries(),
-    );
-    router.get(
-        window.location.pathname,
-        {
-            ...currentParams, // Keep existing params
-            ...newParams,
-        },
-        {
-            preserveState: true,
-            preserveScroll: true,
-            replace: true,
-        },
-    );
 };
 
 // Helper for pagination links

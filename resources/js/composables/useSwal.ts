@@ -1,6 +1,6 @@
 import Swal, { type SweetAlertOptions } from 'sweetalert2';
 
-export function useConfirm() {
+export function useSwal() {
     const confirm = (options: SweetAlertOptions = {}) => {
         const defaultOptions: SweetAlertOptions = {
             title: 'Are you sure?',
@@ -24,7 +24,20 @@ export function useConfirm() {
         } as SweetAlertOptions);
     };
 
+    const toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+        },
+    });
+
     return {
         confirm,
+        toast,
     };
 }
