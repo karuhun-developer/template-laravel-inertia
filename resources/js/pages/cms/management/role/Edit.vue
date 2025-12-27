@@ -13,7 +13,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { useToast } from '@/composables/useToast';
-import { RoleDataItem } from '@/types/cms/management/role';
+import { RoleDataItem } from '@/types/cms/management';
 import { Form } from '@inertiajs/vue3';
 import { Modal } from '@inertiaui/modal-vue';
 import { Save } from 'lucide-vue-next';

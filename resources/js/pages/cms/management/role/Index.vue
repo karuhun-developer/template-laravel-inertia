@@ -13,7 +13,7 @@ import { usePermission } from '@/composables/usePermission';
 import { useToast } from '@/composables/useToast';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { PaginationItem, type BreadcrumbItem } from '@/types';
-import { RoleDataItem } from '@/types/cms/management/role';
+import { RoleDataItem } from '@/types/cms/management';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { ModalLink } from '@inertiaui/modal-vue';
 import dayjs from 'dayjs';

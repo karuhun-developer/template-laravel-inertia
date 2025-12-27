@@ -15,7 +15,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/composables/useToast';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem } from '@/types';
-import { RoleDataItem } from '@/types/cms/management/role';
+import { RoleDataItem } from '@/types/cms/management';
 import { Deferred, Head, router } from '@inertiajs/vue3';
 import { CheckSquare, XSquare } from 'lucide-vue-next';
 

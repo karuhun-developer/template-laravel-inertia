@@ -14,8 +14,7 @@ import {
 } from '@/components/ui/select';
 import { useToast } from '@/composables/useToast';
 import { CommonStatusEnum } from '@/enums/global.enum';
-import { MenuDataItem } from '@/types/cms/management/menu';
-import { RoleDataItem } from '@/types/cms/management/role';
+import { MenuDataItem, RoleDataItem } from '@/types/cms/management';
 import { Form } from '@inertiajs/vue3';
 import { Modal } from '@inertiaui/modal-vue';
 import { Save } from 'lucide-vue-next';
