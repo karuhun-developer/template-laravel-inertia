@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers\Cms\Management;
 
+use App\Actions\Cms\Management\Permission\DeletePermissionAction;
+use App\Actions\Cms\Management\Permission\StorePermissionAction;
+use App\Actions\Cms\Management\Permission\UpdatePermissionAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Cms\Management\Permission\StorePermissionRequest;
+use App\Http\Requests\Cms\Management\Permission\UpdatePermissionRequest;
 use App\Models\Spatie\Permission;
 use App\Traits\WithGetFilterData;
 use Illuminate\Http\Request;
@@ -63,16 +68,11 @@ class PermissionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePermissionRequest $request, StorePermissionAction $action)
     {
         Gate::authorize('create'.$this->resource);
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:permissions,name',
-            'guard_name' => 'required|string|max:255',
-        ]);
-
-        Permission::create($validated);
+        $action->handle($request->validated());
 
         return back();
     }
@@ -100,16 +100,11 @@ class PermissionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Permission $permission)
+    public function update(UpdatePermissionRequest $request, Permission $permission, UpdatePermissionAction $action)
     {
         Gate::authorize('update'.$this->resource);
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:permissions,name,'.$permission->id,
-            'guard_name' => 'required|string|max:255',
-        ]);
-
-        $permission->update($validated);
+        $action->handle($permission, $request->validated());
 
         return back();
     }
@@ -117,11 +112,11 @@ class PermissionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Permission $permission)
+    public function destroy(Permission $permission, DeletePermissionAction $action)
     {
         Gate::authorize('delete'.$this->resource);
 
-        $permission->delete();
+        $action->handle($permission);
 
         return back();
     }
