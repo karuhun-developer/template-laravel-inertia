@@ -28,3 +28,11 @@ export function urlIsActive(
 export function toUrl(href: NonNullable<InertiaLinkProps['href']> | undefined) {
     return typeof href === 'string' ? href : href?.url;
 }
+
+export function formatCurrency(amount: any) {
+    return new Intl.NumberFormat('id-ID', {
+        currency: 'IDR',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+    }).format(amount);
+}
