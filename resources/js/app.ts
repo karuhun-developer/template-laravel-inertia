@@ -2,6 +2,7 @@ import '../css/app.css';
 
 import { createInertiaApp } from '@inertiajs/vue3';
 import { putConfig, renderApp } from '@inertiaui/modal-vue';
+import { VueQueryPlugin } from '@tanstack/vue-query';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import type { DefineComponent } from 'vue';
 import { createApp } from 'vue';
@@ -19,6 +20,7 @@ createInertiaApp({
     setup({ el, App, props, plugin }) {
         createApp({ render: renderApp(App, props) })
             .use(plugin)
+            .use(VueQueryPlugin)
             .mount(el);
     },
     progress: {
@@ -40,7 +42,7 @@ putConfig({
     slideover: {
         closeButton: true,
         closeExplicitly: false,
-        maxWidth: 'md',
+        maxWidth: '2xl',
         paddingClasses: 'p-4 sm:p-6',
         panelClasses: 'bg-(--background) min-h-screen border-l',
         position: 'right',
