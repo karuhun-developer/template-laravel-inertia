@@ -44,6 +44,11 @@ class UserController extends Controller
                 'roles.name as role_name',
             );
 
+        // Filter role id
+        if ($request->has('role_id')) {
+            $model->where('roles.id', $request->role_id);
+        }
+
         $model = $this->getDataWithFilter(
             model: $model,
             searchBy: [
